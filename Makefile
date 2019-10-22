@@ -1,16 +1,18 @@
-all: wheels app
+all: build test deploy
 
-wheels:
-	rm -f .dist/*
-	pipenv lock --requirements > docker/builder/requirements.txt
-	./docker/builder/build_image.sh aio-app-builder
-	docker run -v $(realpath .dist):/.dist aio-app-builder
-	rm docker/builder/requirements.txt
+.PHONY: wheels
+build:
+	cp Pipfile* docker/
+	cp -r src docker/src
+	docker build -t aio-app docker/
+	rm docker/Pipfile*
+	rm -r docker/src
 
-app:
-	if ! [ -d ".dist" ]; then echo "Can't find wheels, run \`make wheels\` first." && exit 1; fi
-	cp -r .dist docker/app/.dist
-	cp -r src docker/app/src
-	./docker/app/build_image.sh aio-app
-	rm -r docker/app/.dist
-	rm -r docker/app/src
+.PHONY: test
+test:
+	echo no tests yet
+
+
+.PHONY: deploy
+deploy:
+	echo no deployment yet
