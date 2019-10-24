@@ -1,12 +1,10 @@
 all: build test deploy
 
-.PHONY: wheels
+.PHONY: build
 build:
-	cp Pipfile* docker/
-	cp -r src docker/src
+	cp -r Pipfile* src docker/
 	docker build -t aio-app docker/
-	rm docker/Pipfile*
-	rm -r docker/src
+	rm -rf docker/Pipfile* docker/src
 
 .PHONY: test
 test:
