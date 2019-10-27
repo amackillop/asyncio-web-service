@@ -1,0 +1,57 @@
+# apiVersion: v1
+# kind: Namespace
+# metadata:
+#   name: aio-app
+#   labels:
+#     name: aio-app
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aio-app-service
+  namespace: default
+spec:
+  selector:
+    app: aio-app
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8000
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aio-app-deployment
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: aio-app
+  replicas: 4
+  template:
+    metadata:
+      labels:
+        app: aio-app
+    spec:
+      containers:
+      - name: aio-app
+        image: amackillop/aio-app
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+          protocol: TCP
+        # volumeMounts:
+        # - mountPath: /logs
+        #   name: tensorboard-logdir
+        # - mountPath: /archive
+        #   name: archive
+      # volumes:
+      # - name: archive
+      #   persistentVolumeClaim:
+      #     claimName: archive-storage
+      # - name: tensorboard-logdir
+      #   emptyDir: {}
+      # imagePullSecrets:
+      # - name: 'dessa-registry-credentials'

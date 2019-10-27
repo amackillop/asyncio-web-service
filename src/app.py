@@ -7,17 +7,14 @@ import base64
 import binascii
 import datetime as dt
 import os
+import subprocess
 import uuid
 from typing import Tuple
 
-# from aioify import aioify
 import uvloop # type: ignore
 import pymonads as pm
 import pymonads.either as either
 from pymonads.utils import identity
-
-# aio_either = aioify(obj=either, name='aio_either')
-
 from aiohttp import web
 from aiohttp.client_exceptions import ClientError
 
@@ -52,7 +49,8 @@ async def get_status(request: web.Request) -> web.Response:
 @routes.get('/v1/images')
 async def get_images(request: web.Request) -> web.Response:
     """Get list of uploaded images"""
-    return web.Response(text='hello')
+    result = subprocess.run('hostname', shell=True, stdout=subprocess.PIPE)
+    return web.Response(text=result.stdout.decode())
     
 
 # Helpers
