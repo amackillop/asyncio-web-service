@@ -1,6 +1,6 @@
 all: build test deploy
 
-.PHONY: build test deploy run
+.PHONY: build test deploy push run
 
 build:
 	cp -r Pipfile* src docker/
@@ -11,10 +11,10 @@ test:
 	echo no tests yet
 
 deploy:
-	echo no deployment yet
+	kubectl apply -f kubernetes/deployment.yaml
 
 push:
 	docker push amackillop/aio-app
 
 run:
-	docker run -p 8000:8000 amackillop/aio-app
+	docker run --rm --name aio-app -d -p 8000:8000 amackillop/aio-app

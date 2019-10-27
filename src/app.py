@@ -6,6 +6,7 @@ import asyncio
 import base64
 import binascii
 import datetime as dt
+import logging
 import os
 import subprocess
 import uuid
@@ -21,13 +22,15 @@ from aiohttp.client_exceptions import ClientError
 from my_types import Job, Uploaded
 import helpers as hf
 
+# logging.basicConfig(level=logging.DEBUG)
 routes = web.RouteTableDef()
+
 
 # Routes
 @routes.get("/v1/jobs")
 async def get_jobs(request: web.Request) -> web.Response:
     """Get a list of all submitted jobs"""
-    return web.Response(json=request.app.get("jobs", {}))
+    return web.json_response(request.app.get("jobs", {}))
 
 
 @routes.post("/v1/jobs")
@@ -40,7 +43,7 @@ async def submit_job(request: web.Request) -> web.Response:
         return web.Response(status=400, reason=msg)
     job_id = str(uuid.uuid4())
     request.app["jobs"][job_id] = _submit_job(job_id, urls)
-    return web.Response(json={"job_id": job_id})
+    return web.json_response({"job_id": job_id})
 
 
 @routes.get("/v1/jobs/{job_id}")
@@ -50,7 +53,7 @@ async def get_status(request: web.Request) -> web.Response:
     job = request.app["jobs"].get(job_id, None)
     if job is None:
         return web.Response(status=404, reason=f"Job {job_id} was not found.")
-    return web.Response(json=dict(job))
+    return web.json_response(dict(job))
 
 
 @routes.get("/v1/images")
@@ -123,15 +126,14 @@ async def start(app: web.Application, host: str, port: int) -> web.AppRunner:
 
 def main() -> None:
     """Entrypoint"""
-    uvloop.install()
     host = "0.0.0.0"
     port = 8000
     app = web.Application()
-    app.add_routes(routes)
+    # app.add_routes(routes)
     app["jobs"] = dict()
     loop = asyncio.get_event_loop()
     runner = loop.run_until_complete(start(app, host, port))
-    print("======== Running on http://0.0.0.0:8000 ========\n" "(Press CTRL+C to quit)")
+    print(f"======== Running on http://{host}:8000 ========\n" "(Press CTRL+C to quit)")
     try:
         loop.run_forever()
     except KeyboardInterrupt:
@@ -141,4 +143,5 @@ def main() -> None:
 if __name__ == "__main__":
     # import tracemalloc
     # tracemalloc.start()
+    # uvloop.install()
     main()

@@ -14,7 +14,7 @@ COPY src /src
 
 EXPOSE 8000
 
-CMD python -u src/app.py
+CMD ["python", "-u", "src/app.py"]
 
 
 
