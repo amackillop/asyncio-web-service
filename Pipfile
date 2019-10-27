@@ -10,6 +10,7 @@ hypothesis = "*"
 pytest = "*"
 pylint = "*"
 mypyls = {extras = ["default-mypy"],file = "https://github.com/matangover/mypyls/archive/master.zip"}
+black = "*"
 
 [packages]
 aiohttp = "*"
@@ -19,3 +20,6 @@ pymonads = "*"
 
 [requires]
 python_version = "3.7.4"
+
+[pipenv]
+allow_prereleases = true
