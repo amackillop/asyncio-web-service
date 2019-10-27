@@ -1,4 +1,3 @@
-
 import imghdr
 import base64
 import collections
@@ -10,7 +9,7 @@ from typing import TypeVar, Callable, Iterable, Iterator, Tuple
 
 import aiohttp
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 # HTTP stuff
 def is_valid_url(url: str) -> bool:
@@ -18,7 +17,7 @@ def is_valid_url(url: str) -> bool:
         result = urlparse(url)
     except:
         return False
-    return all([result.scheme in ['http', 'https'], result.netloc, result.path])
+    return all([result.scheme in ["http", "https"], result.netloc, result.path])
 
 
 async def make_request(method: str, url: str, **kwargs) -> aiohttp.ClientResponse:
@@ -28,24 +27,27 @@ async def make_request(method: str, url: str, **kwargs) -> aiohttp.ClientRespons
 
 async def download_image(url: str) -> str:
     """Download and verify image from given URL."""
-    async with aiohttp.request('get', url, raise_for_status=True) as resp:
+    async with aiohttp.request("get", url, raise_for_status=True) as resp:
         content = await resp.read()
 
-    # Weak check that the page content is actually an image. 
+    # Weak check that the page content is actually an image.
     if imghdr.what(BytesIO(content)) is None:
-        msg = f'Not a valid image at {url}.'
+        msg = f"Not a valid image at {url}."
         raise IOError(msg)
-    return base64.b64encode(content).decode('ascii')
+    return base64.b64encode(content).decode("ascii")
 
 
 # Functional Programming FTW
 def tail(iterable: Iterable) -> Iterable:
-    "Return an iterator over the last n items"
+    """Return an iterator over the last n items"""
     deq = collections.deque(iterable)
     deq.popleft()
     return deq
 
-def partition(predicate: Callable[[T], bool], iterable: Iterable[T]) -> Tuple[Iterator[T], Iterator[T]]:
-    'Use a predicate to partition entries into false entries and true entries'
+
+def partition(
+    predicate: Callable[[T], bool], iterable: Iterable[T]
+) -> Tuple[Iterator[T], Iterator[T]]:
+    """Use a predicate to partition entries into false entries and true entries"""
     t1, t2 = itertools.tee(iterable)
     return filter(predicate, t1), itertools.filterfalse(predicate, t2)
