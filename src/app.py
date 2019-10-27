@@ -5,6 +5,7 @@ Image uploading service implemented using asyncio/aiohttp
 import asyncio
 import base64
 import binascii
+from dataclasses import asdict
 import datetime as dt
 import logging
 import os
@@ -30,7 +31,7 @@ routes = web.RouteTableDef()
 @routes.get("/v1/jobs")
 async def get_jobs(request: web.Request) -> web.Response:
     """Get a list of all submitted jobs"""
-    return web.json_response(request.app.get("jobs", {}))
+    return web.json_response(list(request.app.get("jobs", {}).keys()))
 
 
 @routes.post("/v1/jobs")
@@ -52,14 +53,14 @@ async def get_status(request: web.Request) -> web.Response:
     job_id = request.match_info.get("job_id", None)
     job = request.app["jobs"].get(job_id, None)
     if job is None:
-        return web.Response(status=404, reason=f"Job {job_id} was not found.")
-    return web.json_response(dict(job))
+        return web.json_response({"error": f"Job {job_id} was not found."}, status=404)
+    return web.json_response(asdict(job))
 
 
 @routes.get("/v1/images")
 async def get_images(request: web.Request) -> web.Response:
     """Get list of uploaded images"""
-    result = subprocess.run("hostname", shell=True, stdout=subprocess.PIPE)
+    result = subprocess.run("hostname", shell=True, stdout=subprocess.PIPE, check=True)
     return web.Response(text=result.stdout.decode())
 
 
@@ -129,7 +130,7 @@ def main() -> None:
     host = "0.0.0.0"
     port = 8000
     app = web.Application()
-    # app.add_routes(routes)
+    app.add_routes(routes)
     app["jobs"] = dict()
     loop = asyncio.get_event_loop()
     runner = loop.run_until_complete(start(app, host, port))

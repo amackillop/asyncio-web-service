@@ -17,4 +17,4 @@ push:
 	docker push amackillop/aio-app
 
 run:
-	docker run --rm --name aio-app -d -p 8000:8000 amackillop/aio-app
+	docker run --rm --name aio-app -p 8000:8000 amackillop/aio-app
