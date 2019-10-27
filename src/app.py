@@ -24,17 +24,23 @@ import helpers as hf
 routes = web.RouteTableDef()
 
 # Routes
+@routes.get("/v1/jobs")
+async def get_jobs(request: web.Request) -> web.Response:
+    """Get a list of all submitted jobs"""
+    return web.Response(json=request.app.get("jobs", {}))
+
+
 @routes.post("/v1/jobs")
-async def post_image(request: web.Request) -> web.Response:
+async def submit_job(request: web.Request) -> web.Response:
     """Post a job"""
     req = await request.json()
     urls = req.get("urls", None)
     if urls is None:
         msg = "Bad Request. No `urls` field."
-        return web.Response(status=400, text="Bad", reason=msg)
+        return web.Response(status=400, reason=msg)
     job_id = str(uuid.uuid4())
     request.app["jobs"][job_id] = _submit_job(job_id, urls)
-    return web.Response(text=job_id + "\n")
+    return web.Response(json={"job_id": job_id})
 
 
 @routes.get("/v1/jobs/{job_id}")
@@ -43,8 +49,8 @@ async def get_status(request: web.Request) -> web.Response:
     job_id = request.match_info.get("job_id", None)
     job = request.app["jobs"].get(job_id, None)
     if job is None:
-        return web.Response(text=f"Job {job_id} was not found.")
-    return web.Response(text=str(job))
+        return web.Response(status=404, reason=f"Job {job_id} was not found.")
+    return web.Response(json=dict(job))
 
 
 @routes.get("/v1/images")

@@ -12,11 +12,12 @@ metadata:
   name: aio-app-service
   namespace: default
 spec:
+  type: LoadBalancer
   selector:
     app: aio-app
   ports:
   - protocol: TCP
-    port: 80
+    port: 8000
     targetPort: 8000
 
 ---
@@ -42,16 +43,3 @@ spec:
         ports:
         - containerPort: 8000
           protocol: TCP
-        # volumeMounts:
-        # - mountPath: /logs
-        #   name: tensorboard-logdir
-        # - mountPath: /archive
-        #   name: archive
-      # volumes:
-      # - name: archive
-      #   persistentVolumeClaim:
-      #     claimName: archive-storage
-      # - name: tensorboard-logdir
-      #   emptyDir: {}
-      # imagePullSecrets:
-      # - name: 'dessa-registry-credentials'
