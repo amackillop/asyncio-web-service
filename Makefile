@@ -1,4 +1,4 @@
-all: build test deploy
+all: build test push deploy
 
 .PHONY: build test deploy push run
 
@@ -10,11 +10,12 @@ build:
 test:
 	echo no tests yet
 
-deploy:
-	kubectl apply -f kubernetes/deployment.yaml
-
 push:
 	docker push amackillop/aio-app
 
+deploy:
+	kubectl apply -f kubernetes/deployment.yaml
+
 run:
-	docker run --rm --name aio-app -p 8000:8000 amackillop/aio-app
+	docker-compose -f docker/docker-compose.yaml up
+	# docker run --rm --name aio-app -p 8000:8000 amackillop/aio-app

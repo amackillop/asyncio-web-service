@@ -95,7 +95,7 @@ async def _handle_download(job: Job, url: str) -> pm.Either[str]:
     print(f"Success: {url}")
     job.uploaded.completed.append(url)
     job.uploaded.pending.remove(url)
-    return pm.Left(image)
+    return pm.Right(image)
 
 
 async def _upload(image: pm.Either[str]) -> pm.Either[str]:
