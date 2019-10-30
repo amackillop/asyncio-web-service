@@ -4,7 +4,7 @@ asynchronous programming in python and to learn best practices. The service
 consumes jobs that consist of a list of urls of images to be downloaded and 
 stored somewhere. The service also allows users to query the live state of any 
 running job to see for example, how many images are left to be downloaded or 
-which images failed.
+which images have failed.
 
 ## Requirements
 All that you should need is `docker` and a system capable of running `make`.
