@@ -1,6 +1,6 @@
 all: build test push deploy
 
-.PHONY: build test deploy push run
+.PHONY: build test push deploy run up down
 
 build:
 	cp -r Pipfile* src docker/
@@ -17,5 +17,5 @@ deploy:
 	kubectl apply -f kubernetes/deployment.yaml
 
 run:
-	docker-compose -f docker/docker-compose.yaml up
-	docker-compose -f docker/docker-compose.yaml down
+	bash -c "trap 'docker-compose -f docker/docker-compose.yaml down' EXIT; \
+		docker-compose -f docker/docker-compose.yaml up"
