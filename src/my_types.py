@@ -25,9 +25,8 @@ class Uploaded:
 class Job:
     """Represents a submitted job"""
 
-    uploaded: Uploaded
     job_id: str
+    uploaded: Uploaded
     created: str = field(default_factory=lambda: dt.datetime.utcnow().isoformat())
     finished: str = ""
     status: str = "Pending"
-

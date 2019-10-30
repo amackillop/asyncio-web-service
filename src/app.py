@@ -23,7 +23,7 @@ from aiohttp.client_exceptions import ClientError
 from my_types import Job, Uploaded
 import helpers as hf
 
-# logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 routes = web.RouteTableDef()
 
 
@@ -44,7 +44,7 @@ async def submit_job(request: web.Request) -> web.Response:
         return web.Response(status=400, reason=msg)
     job_id = str(uuid.uuid4())
     request.app["jobs"][job_id] = _submit_job(job_id, urls)
-    return web.json_response({"job_id": job_id})
+    return web.json_response(job_id)
 
 
 @routes.get("/v1/jobs/{job_id}")
@@ -67,8 +67,7 @@ async def get_images(request: web.Request) -> web.Response:
 # Helpers
 def _submit_job(job_id: str, urls: List[str]) -> Job:
     valid, invalid = hf.partition(hf.is_valid_url, urls)
-    uploaded = Uploaded(pending=list(valid), failed=list(invalid))
-    job = Job(job_id=job_id, uploaded=uploaded)
+    job = Job(job_id, Uploaded(pending=list(valid), failed=list(invalid)))
     asyncio.create_task(_handle_job(job))
     return job
 
@@ -87,15 +86,15 @@ async def _handle_download(job: Job, url: str) -> pm.Either[str]:
     try:
         image = await hf.download_image(url)
     except (ClientError, IOError) as exc:
-        print(f"Failed: {url}")
+        logging.info(f"Failed: {url}")
         job.uploaded.failed.append(url)
         job.uploaded.pending.remove(url)
         return pm.Left(str(exc))
 
-    print(f"Success: {url}")
+    logging.info(f"Success: {url}")
     job.uploaded.completed.append(url)
     job.uploaded.pending.remove(url)
-    return pm.Right(image)
+    return pm.Left(image)
 
 
 async def _upload(image: pm.Either[str]) -> pm.Either[str]:
@@ -142,7 +141,8 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    # import tracemalloc
-    # tracemalloc.start()
-    # uvloop.install()
+    import tracemalloc
+
+    tracemalloc.start()
+    uvloop.install()
     main()
