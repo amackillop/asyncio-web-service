@@ -19,4 +19,3 @@ deploy:
 run:
 	docker-compose -f docker/docker-compose.yaml up
 	docker-compose -f docker/docker-compose.yaml down
-	# docker run --rm --name aio-app -p 8000:8000 amackillop/aio-app
