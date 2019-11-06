@@ -2,9 +2,13 @@ version: "3.7"
 services:
   app:
     image: amackillop/aio-app
+    container_name: aio-app
     ports:
       - "8000"
+    environment: 
+      - HOST=0.0.0.0
+      - PORT=8000
   redis:
     image: redis:latest
     ports:
-      - "6379:6379"
+      - "6379"
