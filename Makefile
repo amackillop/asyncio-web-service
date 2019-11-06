@@ -4,7 +4,8 @@ all: build test push deploy
 
 build:
 	cp -r Pipfile* src docker/
-	docker build -t amackillop/aio-app docker/
+	# docker build -t amackillop/aio-app docker/
+	docker-compose -f docker/docker-compose.yaml build
 	rm -rf docker/Pipfile* docker/src
 
 test:
@@ -17,12 +18,12 @@ deploy:
 	kubectl apply -f kubernetes/deployment.yaml
 
 run:
-	bash -c "trap 'docker-compose -f docker/docker-compose.yaml down' EXIT; \
-		docker-compose -f docker/docker-compose.yaml up"
+	bash -c "trap 'docker-compose -f docker/docker-compose.yaml down --remove-orphans' EXIT; \
+		docker-compose -f docker/docker-compose.yaml up --scale app=10"
 
 start:
-	docker-compose -d -f docker/docker-compose.yaml up
+	docker-compose -f docker/docker-compose.yaml up -d --scale app=10
 
 stop:
-	docker-compose -f docker/docker-compose.yaml down
+	docker-compose -f docker/docker-compose.yaml down --remove-orphans
 

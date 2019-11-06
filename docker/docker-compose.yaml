@@ -2,13 +2,21 @@ version: "3.7"
 services:
   app:
     image: amackillop/aio-app
-    container_name: aio-app
-    ports:
-      - "8000"
+    build: .
+    expose: 
+      - 8000
     environment: 
       - HOST=0.0.0.0
       - PORT=8000
   redis:
     image: redis:latest
-    ports:
+    expose:
       - "6379"
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - app
+    ports:
+      - "4000:4000"
