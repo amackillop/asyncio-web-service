@@ -11,7 +11,7 @@ import logging
 import os
 import subprocess
 import uuid
-from typing import Tuple, List
+from typing import Tuple, List, Union
 
 import uvloop  # type: ignore
 import pymonads as pm
@@ -115,25 +115,25 @@ async def _upload_to_imgur(image_as_b64: str) -> pm.Either[web.Response]:
     return pm.Right(resp)
 
 
-async def start(app: web.Application, host: str, port: int) -> web.AppRunner:
+async def start(app: web.Application, host: str, port: Union[str,int]) -> web.AppRunner:
     """Start the server"""
     runner = web.AppRunner(app)
     await runner.setup()
-    server = web.TCPSite(runner, host, port)
+    server = web.TCPSite(runner, host, int(port))
     await server.start()
     return runner
 
 
 def main() -> None:
     """Entrypoint"""
-    host = "0.0.0.0"
-    port = 8000
+    host = os.environ.get("HOST", "localhost")
+    port = os.environ.get('PORT', 8000)
     app = web.Application()
     app.add_routes(routes)
     app["jobs"] = dict()
     loop = asyncio.get_event_loop()
     runner = loop.run_until_complete(start(app, host, port))
-    print(f"======== Running on http://{host}:8000 ========\n" "(Press CTRL+C to quit)")
+    print(f"======== Running on http://{host}:{port} ========\n" "(Press CTRL+C to quit)")
     try:
         loop.run_forever()
     except KeyboardInterrupt:

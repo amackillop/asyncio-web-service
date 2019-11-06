@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
+PORT=$(docker port aio-app | cut -d: -f2)
 
 spam () {
   for ((i=1;i<=$1;i++)); do 
     curl --header "Content-Type: application/json" \
     --request POST \
     --data '{"urls":["https://www.dummyimage.com/80x80", "https://www.dumimage.com/40x40"]}' \
-    localhost:8000/v1/jobs &
+    localhost:${PORT}/v1/jobs &
     done
   wait
 }

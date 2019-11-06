@@ -12,8 +12,6 @@ COPY --from=builder .dist /.dist
 RUN echo .dist/* | xargs pip install --no-index --find-links=/.dist
 COPY src /src
 
-EXPOSE 8000
-
 CMD ["python", "-u", "src/app.py"]
 
 
