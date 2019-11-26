@@ -1,4 +1,4 @@
-from rejson import Client, Path
+from rejson import Client, Path #type: ignore
 from typing import Union
 
 
@@ -6,7 +6,7 @@ Json = Union[str, dict, list]
 
 
 class ReJson:
-    def __init__(self, host: str, port: int) -> None:
+    def __init__(self, host: str, port: Union[str, int]) -> None:
         """Instantiate a connection to ReJson.
         
         :param host: The hostname/ip of the Redis instance.
@@ -15,6 +15,7 @@ class ReJson:
         :type port: int
         """
         self._client = Client(host=host, port=port, decode_responses=True)
+        self._client.
 
     def post(self, key: str, obj: Json) -> None:
         """Post a new Json object to the store.
@@ -70,3 +71,15 @@ class ReJson:
         """
         return self._client.jsonarrpop(key, f".{path}")
 
+    def remove(self, key: str, path: str, value: Json) -> None:
+        """Remove something from some array within a Json object.
+        
+        :param key: The key that the Json object was stored at.
+        :type key: str
+        :param path: A period seperated string of keys to travers the Json.
+        :type path: str
+        :param value: The value to remove from the array.
+        :type value: Json
+        """        
+        index = self._client.jsonarrindex(key, f'.{path}', value)
+        self._client.jsondel(key, f'{path}[{index}]')

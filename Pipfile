@@ -18,6 +18,7 @@ requests = "*"
 uvloop = "*"
 pymonads = "*" 
 rejson = "*"
+redis = "*"
 
 [requires]
 python_version = "3.7.4"

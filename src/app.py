@@ -46,7 +46,6 @@ def main() -> None:
     port = os.environ.get("PORT", 8000)
     app = web.Application()
     app.add_routes(ROUTES)
-    app["jobs"] = dict()
     loop = asyncio.get_event_loop()
     signals = (signal.SIGHUP, signal.SIGTERM, signal.SIGINT)
     for s in signals:
