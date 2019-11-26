@@ -19,6 +19,7 @@ uvloop = "*"
 pymonads = "*" 
 rejson = "*"
 redis = "*"
+six = "*"
 
 [requires]
 python_version = "3.7.4"

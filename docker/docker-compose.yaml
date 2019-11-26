@@ -7,6 +7,8 @@ services:
     environment: 
       - HOST=0.0.0.0
       - PORT=8000
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     build: .
     deploy:
       replicas: 10

@@ -41,16 +41,15 @@ class Jobs(web.View):
         self._submit_job(job_id, urls)
         return web.json_response(job_id, status=201)
 
-    def _submit_job(self, job_id: str, urls: List[str]) -> Job:
+    def _submit_job(self, job_id: str, urls: List[str]) -> None:
         valid, invalid = hf.partition(hf.is_valid_url, urls)
         job = Job(job_id, Uploaded(pending=list(valid), failed=list(invalid)))
         redis.post(job_id, job.to_dict())
         asyncio.create_task(self._handle_job(job))
-        return job
 
     async def _handle_job(self, job: Job) -> None:
         job_id = job.job_id
-        redis.update(job.job_id, 'status', 'In-Progress')
+        redis.update(job_id, 'status', 'In-Progress')
         images = await asyncio.gather(
             *[self._handle_download(job_id, url) for url in job.uploaded.pending]
         )
