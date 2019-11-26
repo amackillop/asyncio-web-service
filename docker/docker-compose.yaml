@@ -11,7 +11,7 @@ services:
     deploy:
       replicas: 10
   redis:
-    image: redis:latest
+    image: redislabs/rejson:latest
     expose:
       - "6379"
   nginx:

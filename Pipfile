@@ -17,6 +17,7 @@ aiohttp = "*"
 requests = "*"
 uvloop = "*"
 pymonads = "*" 
+rejson = "*"
 
 [requires]
 python_version = "3.7.4"

@@ -2,7 +2,7 @@
 Types used project wide to catch runtime errors before they happen
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, asdict
 from typing import TypeVar, Callable, Any, List
 
 import datetime as dt
@@ -30,3 +30,6 @@ class Job:
     created: str = field(default_factory=lambda: dt.datetime.utcnow().isoformat())
     finished: str = ""
     status: str = "Pending"
+
+    def to_dict(self) -> dict:
+        return asdict(self)

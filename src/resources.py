@@ -2,7 +2,6 @@
 HTTP Resources
 """
 import asyncio
-from dataclasses import asdict
 import datetime as dt
 import logging
 import subprocess
@@ -39,7 +38,7 @@ class Jobs(web.View):
             return web.Response(status=400, reason=msg)
         job_id = str(uuid.uuid4())
         self.request.app["jobs"][job_id] = self._submit_job(job_id, urls)
-        return web.json_response(job_id)
+        return web.json_response(job_id, status=201)
 
     def _submit_job(self, job_id: str, urls: List[str]) -> Job:
         valid, invalid = hf.partition(hf.is_valid_url, urls)
@@ -85,7 +84,7 @@ class SingleJob(web.View):
             return web.json_response(
                 {"error": f"Job {job_id} was not found."}, status=404
             )
-        return web.json_response(asdict(job))
+        return web.json_response(job.to_dict())
 
 
 @ROUTES.view("/v1/images")
