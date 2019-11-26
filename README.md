@@ -15,7 +15,7 @@ To build and run the app locally, simply use:
 
 This will build and launch the necessary docker containers. You can then hammer
 the app with the `spam` script. For example,    
-```./spam 1000```  
+```./spam 1000 localhost 8080```  
 Will send a thousand jobs to the application for processing.
 
 You can query the status of any job via the following enpoint:  
