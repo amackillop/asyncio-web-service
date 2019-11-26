@@ -15,7 +15,6 @@ class ReJson:
         :type port: int
         """
         self._client = Client(host=host, port=port, decode_responses=True)
-        self._client.
 
     def post(self, key: str, obj: Json) -> None:
         """Post a new Json object to the store.
