@@ -1,5 +1,5 @@
 """
-Image uploading service implemented using asyncio/aiohttp
+HTTP Resources
 """
 import asyncio
 from dataclasses import asdict
@@ -22,8 +22,6 @@ import helpers as hf
 logging.basicConfig(level=logging.INFO)
 
 ROUTES = web.RouteTableDef()
-
-# Routes
 
 
 @ROUTES.view("/v1/jobs")
@@ -71,7 +69,7 @@ class Jobs(web.View):
         logging.info("Success: %s", url)
         job.uploaded.completed.append(url)
         job.uploaded.pending.remove(url)
-        return pm.Left(image)
+        return pm.Right(image)
 
     async def _upload(self, image: pm.Either[str]) -> pm.Either[str]:
         return either.either(identity, identity, image)

@@ -18,7 +18,7 @@ deploy:
 
 run:
 	bash -c "trap 'docker-compose -f docker/docker-compose.yaml down --remove-orphans' EXIT; \
-		docker-compose -f docker/docker-compose.yaml up --scale app=10"
+		docker-compose -f docker/docker-compose.yaml up --scale app=3"
 
 deploy:
 	docker stack deploy -c docker/docker-compose.yaml aio-app

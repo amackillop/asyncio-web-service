@@ -20,11 +20,6 @@ def is_valid_url(url: str) -> bool:
     return all([result.scheme in ["http", "https"], result.netloc, result.path])
 
 
-async def make_request(method: str, url: str, **kwargs) -> aiohttp.ClientResponse:
-    async with aiohttp.request(method, url, **kwargs) as resp:
-        return resp
-
-
 async def download_image(url: str) -> str:
     """Download and verify image from given URL."""
     async with aiohttp.request("get", url, raise_for_status=True) as resp:
