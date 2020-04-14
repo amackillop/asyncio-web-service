@@ -3,7 +3,9 @@ Image uploading service implemented using asyncio/aiohttp
 """
 
 import asyncio
-import logging
+from asyncio import AbstractEventLoop
+
+# import logging
 import os
 from typing import Union, Type
 
@@ -12,32 +14,46 @@ from aiohttp import web
 import signal
 
 from resources import ROUTES
+import aiologger
 
-logging.basicConfig(level=logging.INFO)
+from redis_client import ReJson
+
+logger = aiologger.Logger.with_default_handlers()
+# logging.basicConfig(level=logging.DEBUG)
 
 
-async def start(app: web.Application, host: str, port: Union[str, int]) -> web.AppRunner:
+async def handle_exception(loop: AbstractEventLoop, context: dict):
+    # context["message"] will always be there; but context["exception"] may not
+    msg = context.get("exception", context["message"])
+    await logger.error(f"Caught exception: {msg}")
+    await logger.info("Shutting down...")
+    asyncio.create_task(shutdown(loop))
+
+
+async def shutdown(loop: AbstractEventLoop, signal=None):
+    """Cleanup tasks tied to the service's shutdown."""
+    if signal:
+        await logger.info(f"Received exit signal {signal.name}...")
+
+    tasks = [t for t in asyncio.all_tasks() if t is not asyncio.current_task()]
+
+    for task in tasks:
+        task.cancel()
+
+    await logger.info(f"Cancelling {len(tasks)} outstanding tasks")
+    await asyncio.gather(*tasks, return_exceptions=True)
+    loop.stop()
+
+
+async def start(
+    app: web.Application, host: str, port: Union[str, int]
+) -> web.AppRunner:
     """Start the server"""
     runner = web.AppRunner(app)
     await runner.setup()
     server = web.TCPSite(runner, host, int(port))
     await server.start()
     return runner
-
-async def shutdown(signal, loop):
-    """Cleanup tasks tied to the service's shutdown."""
-    logging.info(f"Received exit signal {signal.name}...")
-    logging.info("Closing database connections")
-    logging.info("Nacking outstanding messages")
-    tasks = [t for t in asyncio.all_tasks() if t is not
-             asyncio.current_task()]
-
-    [task.cancel() for task in tasks]
-
-    logging.info(f"Cancelling {len(tasks)} outstanding tasks")
-    await asyncio.gather(*tasks)
-    logging.info(f"Flushing metrics")
-    loop.stop()
 
 
 def main() -> None:
@@ -46,25 +62,30 @@ def main() -> None:
     port = os.environ.get("PORT", 8000)
     app = web.Application()
     app.add_routes(ROUTES)
+    app["db"] = ReJson(
+        os.getenv("REDIS_HOST", "localhost"), os.getenv("REDIS_PORT", 6379)
+    )
     loop = asyncio.get_event_loop()
     signals = (signal.SIGHUP, signal.SIGTERM, signal.SIGINT)
     for s in signals:
         loop.add_signal_handler(
-            s, lambda s=s: asyncio.create_task(shutdown(s, loop)))
-
-    runner = loop.run_until_complete(start(app, host, port))
-    print(f"======== Running on http://{host}:{port} ========\n(Press CTRL+C to quit)")
+            s, lambda s=s: asyncio.create_task(shutdown(loop, signal=s))
+        )
+    loop.set_exception_handler(handle_exception)
+    print(
+        f"======== Running on http://{host}:{port} ========\n" "(Press CTRL+C to quit)"
+    )
     try:
+        runner = loop.run_until_complete(start(app, host, port))
         loop.run_forever()
-    except KeyboardInterrupt:
-        loop.run_until_complete(runner.cleanup())
     finally:
+        # runner.cleanup()
         loop.close()
 
 
 if __name__ == "__main__":
-    # import tracemalloc
+    import tracemalloc
 
-    # tracemalloc.start()
-    uvloop.install()
+    tracemalloc.start()
+    # uvloop.install()
     main()
