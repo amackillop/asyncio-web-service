@@ -4,8 +4,6 @@ Image uploading service implemented using asyncio/aiohttp
 
 import asyncio
 from asyncio import AbstractEventLoop
-
-# import logging
 import os
 from typing import Union, Type
 
@@ -14,7 +12,7 @@ from aiohttp import web
 import signal
 
 from resources import ROUTES
-import aiologger
+import aiologger  # type: ignore
 
 from redis_client import ReJson
 

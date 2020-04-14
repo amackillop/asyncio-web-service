@@ -18,7 +18,7 @@ class ReJson:
 
     def keys(self) -> Json:
         return self._client.keys()
-    
+
     def post(self, key: str, obj: Json) -> None:
         """Post a new Json object to the store.
         
