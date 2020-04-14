@@ -8,10 +8,6 @@ from typing import TypeVar, Callable, Any, List
 import datetime as dt
 
 
-FuncType = Callable[..., Any]
-Func = TypeVar("Func", bound=FuncType)
-
-
 @dataclass(frozen=True)
 class Uploaded:
     """Represents uploaded urls"""

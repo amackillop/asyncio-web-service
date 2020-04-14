@@ -16,7 +16,7 @@ from pymonads import either
 from pymonads.utils import identity
 
 
-from my_types import Job, Uploaded
+from _types import Job, Uploaded
 import helpers as hf
 from redis_client import ReJson
 
@@ -27,7 +27,6 @@ ROUTES = web.RouteTableDef()
 
 @ROUTES.view("/v1/jobs")
 class Jobs(web.View):
-    
     def __init__(self, request: web.Request) -> None:
         super().__init__(request)
         self.db = self.request.app["db"]
@@ -84,7 +83,6 @@ class Jobs(web.View):
 
 @ROUTES.view("/v1/jobs/{job_id}")
 class SingleJob(web.View):
-    
     def __init__(self, request: web.Request) -> None:
         super().__init__(request)
         self.db = self.request.app["db"]
