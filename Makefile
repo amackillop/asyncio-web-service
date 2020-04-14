@@ -3,9 +3,10 @@ all: build test push deploy
 .PHONY: build test push deploy run deploy
 
 build:
-	cp -r Pipfile* src docker/
-	docker-compose -f docker/docker-compose.yaml build
-	rm -rf docker/Pipfile* docker/src
+	pipenv lock --requirements > docker/requirements.txt
+	cp -r src docker/
+	docker-compose build
+	rm -rf docker/requirements.txt docker/src
 
 test:
 	echo no tests yet
@@ -17,8 +18,8 @@ deploy:
 	kubectl apply -f kubernetes/deployment.yaml
 
 run:
-	bash -c "trap 'docker-compose -f docker/docker-compose.yaml down --remove-orphans' EXIT; \
-		docker-compose -f docker/docker-compose.yaml up --scale app=3"
+	bash -c "trap 'docker-compose down --remove-orphans' EXIT; \
+		docker-compose up --scale app=3"
 
-deploy:
-	docker stack deploy -c docker/docker-compose.yaml aio-app
+# deploy:
+# 	docker stack deploy -c docker/docker-compose.yaml aio-app
