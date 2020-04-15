@@ -1,8 +1,7 @@
 from hypothesis import given
 import hypothesis.strategies as st
 
-import helpers as hf
-
+from .context import helpers as hf
 
 @given(st.lists(st.integers(), unique=True, min_size=1))
 def test_tail_only_removes_first_item(iterable):
