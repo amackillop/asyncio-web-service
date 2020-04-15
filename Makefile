@@ -9,7 +9,10 @@ build:
 	rm -rf docker/requirements.txt docker/src
 
 test:
-	echo no tests yet
+	# Type Checking
+	mypy src
+	# Running Tests
+	pytest src
 
 push:
 	docker push amackillop/aio-app
