@@ -38,8 +38,20 @@ spec:
     spec:
       containers:
       - name: aio-app
-        image: amackillop/aio-app
-        imagePullPolicy: IfNotPresent
+        image: amackillop/aio-app:latest
+        env:
+        - name: HOST
+          value: "0.0.0.0"
+        - name: PORT
+          value: "8000"
+        - name: REDIS_HOST
+          value: redis
+        - name: REDIS_PORT
+          value: "6379"
         ports:
         - containerPort: 8000
           protocol: TCP
+
+
+18003631835
+case no 5404258
