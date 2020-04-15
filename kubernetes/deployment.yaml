@@ -51,7 +51,3 @@ spec:
         ports:
         - containerPort: 8000
           protocol: TCP
-
-
-18003631835
-case no 5404258
