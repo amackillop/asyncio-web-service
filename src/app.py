@@ -28,7 +28,7 @@ async def handle_exception(loop: AbstractEventLoop, context: dict):
     asyncio.create_task(shutdown(loop))
 
 
-async def shutdown(loop: AbstractEventLoop, signal: Optional[Signals]=None):
+async def shutdown(loop: AbstractEventLoop, signal: Optional[Signals] = None):
     """Cleanup tasks tied to the service's shutdown."""
     if signal:
         await logger.info(f"Received exit signal {signal.name}...")
@@ -56,13 +56,11 @@ async def start(
 
 def main() -> None:
     """Entrypoint"""
-    host = os.environ.get("HOST", "localhost")
-    port = os.environ.get("PORT", 8000)
+    host = os.environ["HOST"]
+    port = os.environ["PORT"]
     app = web.Application()
     app.add_routes(ROUTES)
-    app["db"] = ReJson(
-        os.getenv("REDIS_HOST", "localhost"), os.getenv("REDIS_PORT", 6379)
-    )
+    app["db"] = ReJson(os.environ["REDIS_HOST"], os.environ["REDIS_PORT"])
     loop = asyncio.get_event_loop()
     signals = (signal.SIGHUP, signal.SIGTERM, signal.SIGINT)
     for s in signals:
