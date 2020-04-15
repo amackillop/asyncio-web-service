@@ -5,11 +5,12 @@ Image uploading service implemented using asyncio/aiohttp
 import asyncio
 from asyncio import AbstractEventLoop
 import os
-from typing import Union, Type
+from typing import Union, Type, Optional
 
 import uvloop  # type: ignore
 from aiohttp import web
 import signal
+from signal import Signals
 
 from resources import ROUTES
 import aiologger  # type: ignore
@@ -17,7 +18,6 @@ import aiologger  # type: ignore
 from redis_client import ReJson
 
 logger = aiologger.Logger.with_default_handlers()
-# logging.basicConfig(level=logging.DEBUG)
 
 
 async def handle_exception(loop: AbstractEventLoop, context: dict):
@@ -28,7 +28,7 @@ async def handle_exception(loop: AbstractEventLoop, context: dict):
     asyncio.create_task(shutdown(loop))
 
 
-async def shutdown(loop: AbstractEventLoop, signal=None):
+async def shutdown(loop: AbstractEventLoop, signal: Optional[Signals]=None):
     """Cleanup tasks tied to the service's shutdown."""
     if signal:
         await logger.info(f"Received exit signal {signal.name}...")
