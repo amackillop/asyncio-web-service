@@ -1,3 +1,5 @@
 .*
 __pycache__/
+docker/src/
+docker/requirements.txt
 !.git*
