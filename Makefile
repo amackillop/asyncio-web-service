@@ -24,5 +24,6 @@ run:
 	bash -c "trap 'docker-compose down --remove-orphans' EXIT; \
 		docker-compose up --scale app=3"
 
+# Weird bug this this
 # deploy:
-# 	docker stack deploy -c docker/docker-compose.yaml aio-app
+# 	docker stack deploy --orchestrator=kubernetes -c docker-compose.yaml aio-app

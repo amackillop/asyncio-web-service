@@ -4,11 +4,6 @@ services:
     image: amackillop/aio-app
     expose: 
       - 8000
-    environment: 
-      - HOST=0.0.0.0
-      - PORT=8000
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
     build: docker/
     deploy:
       replicas: 10
