@@ -10,6 +10,9 @@ pylint = "*"
 mypyls = {extras = ["default-mypy"],file = "https://github.com/matangover/mypyls/archive/master.zip"}
 black = "*"
 profiling = "*"
+hypothesis = "*"
+flake8 = "*"
+pytest = "*"
 
 [packages]
 aiohttp = "*"
@@ -20,9 +23,6 @@ rejson = "*"
 redis = "*"
 six = "*"
 aiologger = "*"
-hypothesis = "*"
-flake8 = "*"
-pytest = "*"
 
 [requires]
 python_version = "3.8"
