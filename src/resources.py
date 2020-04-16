@@ -4,7 +4,6 @@ HTTP Resources
 import asyncio
 import datetime as dt
 import logging
-import os
 import subprocess
 import uuid
 from typing import List
@@ -18,7 +17,6 @@ from pymonads.utils import identity
 
 from _types import Job, Uploaded
 import helpers as hf
-from redis_client import ReJson
 
 logging.basicConfig(level=logging.INFO)
 
@@ -32,7 +30,8 @@ class Jobs(web.View):
         self.db = self.request.app["db"]
 
     async def get(self) -> web.Response:
-        return web.json_response(self.db._client.keys())
+        """Get a list of submitted jobs."""
+        return web.json_response(self.db.keys())
 
     async def post(self) -> web.Response:
         """Post a job"""
@@ -57,7 +56,7 @@ class Jobs(web.View):
         images = await asyncio.gather(
             *[self._handle_download(job_id, url) for url in job.uploaded.pending]
         )
-        results = await asyncio.gather(*[self._upload(image) for image in images])
+        await asyncio.gather(*[self._upload(image) for image in images])
         self.db.update(job_id, "finished", dt.datetime.utcnow().isoformat())
         self.db.update(job_id, "status", "complete")
 

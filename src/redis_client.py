@@ -1,14 +1,18 @@
-from rejson import Client, Path  # type: ignore
+"""Facade for interacting with ReJson"""
+
 from typing import Union
+from rejson import Client, Path  # type: ignore
 
 
 Json = Union[str, dict, list]
 
 
 class ReJson:
+    """Facade for ReJson"""
+
     def __init__(self, host: str, port: Union[str, int]) -> None:
         """Instantiate a connection to ReJson.
-        
+
         :param host: The hostname/ip of the Redis instance.
         :type host: str
         :param port: The port of the Redis instance.
@@ -17,11 +21,12 @@ class ReJson:
         self._client = Client(host=host, port=port, decode_responses=True)
 
     def keys(self) -> Json:
+        """Get all keys"""
         return self._client.keys()
 
     def post(self, key: str, obj: Json) -> None:
         """Post a new Json object to the store.
-        
+
         :param key: The key to store the Json at.
         :type key: str
         :param obj: What to store.
@@ -31,7 +36,7 @@ class ReJson:
 
     def get(self, key: str) -> Json:
         """[summary]
-        
+
         :param key: The key that the Json object was stored at.
         :type key: str
         :return: The Json stored at `key`.
@@ -41,7 +46,7 @@ class ReJson:
 
     def update(self, key: str, path: str, value: Json) -> None:
         """[summary]
-        
+
         :param key: The key that the Json object was stored at.
         :type key: str
         :param path: A period seperated string of keys to traverse the Json.
@@ -53,7 +58,7 @@ class ReJson:
 
     def append(self, key: str, path: str, *values: Json) -> None:
         """Append to some array within a Json obejct.
-        
+
         :param key: The key that the Json object was stored at.
         :type key: str
         :param path: A period seperated string of keys to traverse the Json.
