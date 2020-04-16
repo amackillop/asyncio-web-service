@@ -28,3 +28,4 @@ jobs:
     - name: Lint, Type Check, and Test
       run: |
         make test
+        
