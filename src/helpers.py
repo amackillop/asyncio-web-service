@@ -42,7 +42,7 @@ def tail(iterable: Iterable) -> Iterable:
 
 def partition(
     predicate: Callable[[T], bool], iterable: Iterable[T]
-) -> Tuple[Iterator[T], Iterator[T]]:
+) -> Tuple[Iterable[T], Iterable[T]]:
     """Use a predicate to partition entries into false entries and true entries"""
     t1, t2 = itertools.tee(iterable)
     return filter(predicate, t1), itertools.filterfalse(predicate, t2)
