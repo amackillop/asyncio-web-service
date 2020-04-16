@@ -12,8 +12,7 @@ pylint = "*"
 mypyls = {extras = ["default-mypy"],file = "https://github.com/matangover/mypyls/archive/master.zip"}
 black = "*"
 profiling = "*"
-pytest-asyncio = "*"
-pytest-mock = "*"
+flake8 = "*"
 
 [packages]
 aiohttp = "*"
@@ -26,7 +25,7 @@ six = "*"
 aiologger = "*"
 
 [requires]
-python_version = "3.7.4"
+python_version = "3.8"
 
 [pipenv]
 allow_prereleases = true

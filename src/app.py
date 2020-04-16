@@ -5,22 +5,22 @@ Image uploading service implemented using asyncio/aiohttp
 import asyncio
 from asyncio import AbstractEventLoop
 import os
-from typing import Union, Type, Optional
+from typing import Union, Optional
+import signal
+from signal import Signals  # pylint: disable=no-name-in-module
 
 import uvloop  # type: ignore
 from aiohttp import web
-import signal
-from signal import Signals
-
-from resources import ROUTES
 import aiologger  # type: ignore
 
+from resources import ROUTES
 from redis_client import ReJson
 
 logger = aiologger.Logger.with_default_handlers()
 
 
 async def handle_exception(loop: AbstractEventLoop, context: dict):
+    """"""
     # context["message"] will always be there; but context["exception"] may not
     msg = context.get("exception", context["message"])
     await logger.error(f"Caught exception: {msg}")
@@ -28,10 +28,10 @@ async def handle_exception(loop: AbstractEventLoop, context: dict):
     asyncio.create_task(shutdown(loop))
 
 
-async def shutdown(loop: AbstractEventLoop, signal: Optional[Signals] = None):
+async def shutdown(loop: AbstractEventLoop, sig: Optional[Signals] = None):
     """Cleanup tasks tied to the service's shutdown."""
-    if signal:
-        await logger.info(f"Received exit signal {signal.name}...")
+    if sig:
+        await logger.info(f"Received exit signal {sig.name}...")
 
     tasks = [t for t in asyncio.all_tasks() if t is not asyncio.current_task()]
 
@@ -65,7 +65,7 @@ def main() -> None:
     signals = (signal.SIGHUP, signal.SIGTERM, signal.SIGINT)
     for s in signals:
         loop.add_signal_handler(
-            s, lambda s=s: asyncio.create_task(shutdown(loop, signal=s))
+            s, lambda s=s: asyncio.create_task(shutdown(loop, sig=s))
         )
     loop.set_exception_handler(handle_exception)
     print(
@@ -75,7 +75,7 @@ def main() -> None:
         runner = loop.run_until_complete(start(app, host, port))
         loop.run_forever()
     finally:
-        # runner.cleanup()
+        loop.run_until_complete(runner.cleanup())
         loop.close()
 
 
