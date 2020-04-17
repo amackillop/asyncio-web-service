@@ -43,7 +43,7 @@ run:
 setup-ci:
 	python -m pip install --upgrade pip
 	python -m pip install pipenv
-	pipenv lock 
+	pipenv sync
 
 .PHONY: acceptance
 acceptance:
