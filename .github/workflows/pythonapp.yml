@@ -31,6 +31,12 @@ jobs:
       - name: Build Images
         run: |
           make build
+      - name: Acceptance
+        run: |
+          make run-ci
+          pipenv run pytest src/acceptance
+
+
   # build:
   #   runs-on: ubuntu-latest
   #   steps:

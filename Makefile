@@ -44,3 +44,9 @@ setup-ci:
 	python -m pip install --upgrade pip
 	python -m pip install pipenv
 	pipenv sync --dev
+
+.PHONY: acceptance
+acceptance:
+	docker-compose up -d --scale app=3
+	pipenv run pytest src/acceptance
+	docker-compose down --remove-orphans

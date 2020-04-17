@@ -2,11 +2,16 @@ version: "3.7"
 services:
   app:
     image: amackillop/aio-app
+    build: docker/
     expose: 
       - 8000
-    build: docker/
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8000
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     deploy:
-      replicas: 10
+      replicas: 3
   redis:
     image: redislabs/rejson:latest
     expose:
