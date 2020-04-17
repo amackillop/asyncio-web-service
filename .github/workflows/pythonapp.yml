@@ -11,10 +11,7 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest] #, windows-latest, macOS-latest]
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
@@ -36,12 +33,13 @@ jobs:
           make acceptance
       - name: Push Images
         run: |
+          docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASS }}
           make push
 
 
-  # build:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: 
-# Every job runs in parallel
+# Every specified job runs in parallel
+# Matrix builds:
+# runs-on: ${{ matrix.os }}
+# strategy:
+#   matrix:
+#     os: [ubuntu-latest, windows-latest, macOS-latest]
