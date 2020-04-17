@@ -33,7 +33,7 @@ jobs:
           make acceptance
       - name: Push Images
         run: |
-          docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASS }}
+          docker login -u ${{ secrets.DOCKER_USER }} -p "${{ secrets.DOCKER_PASS }}"
           make push
 
 
