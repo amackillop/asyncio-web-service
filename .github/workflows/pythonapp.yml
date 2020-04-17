@@ -34,6 +34,9 @@ jobs:
       - name: Acceptance
         run: |
           make acceptance
+      - name: Push Images
+        run: |
+          make push
 
 
   # build:

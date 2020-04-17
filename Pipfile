@@ -23,9 +23,6 @@ rejson = "*"
 redis = "*"
 six = "*"
 aiologger = "*"
-hypothesis = "*"
-flake8 = "*"
-pytest = "*"
 
 [requires]
 python_version = "3.8"
