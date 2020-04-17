@@ -20,5 +20,20 @@ the app with the `spam` script. For example,
 ```./spam 1000 localhost 8080```  
 Will send a thousand jobs to the application for processing.
 
-You can query the status of any job via the following enpoint:  
-```curl localhost:8000/v1/jobs/<job_id>```
+You can query the status of any job via the following endpoint:  
+```curl localhost:8080/v1/jobs/<job_id>```
+
+
+## Dojo
+
+Github actions docs: https://help.github.com/en/actions
+Workflow syntax: https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions
+
+Feel free to use my repo to mess around on your own:
+
+Clone: `git clone git@github.com:amackillop/asyncio-web-service.git`
+Branch: `git branch <branch_name>`
+Switch: `git switch <branch_name>`
+
+Make changes to the `.github/workflows/pythonapp.yml` file then create a pull request to trigger the pipeline.
+Alternatively, I can edit the workflow file on master to include your branch on push.
