@@ -1,5 +1,5 @@
 """"""
-import pytest
+import pytest # type: ignore
 import re
 import requests
 import subprocess as sp
