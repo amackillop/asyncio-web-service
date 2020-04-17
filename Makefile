@@ -15,7 +15,7 @@ test:
 	# Type Check
 	pipenv run mypy src
 	# Run Tests
-	pipenv run pytest src
+	pipenv run pytest src/tests
 
 .PHONY: push
 push:
