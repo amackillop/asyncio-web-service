@@ -38,3 +38,9 @@ run:
 # Weird bug with this
 # deploy:
 # 	docker stack deploy --orchestrator=kubernetes -c docker-compose.yaml aio-app
+
+.PHONY: setup-ci
+setup-ci:
+	python -m pip install --upgrade pip
+	python -m pip install pipenv
+	pipenv sync --dev
