@@ -33,8 +33,7 @@ jobs:
           make build
       - name: Acceptance
         run: |
-          make run-ci
-          pipenv run pytest src/acceptance
+          make acceptance
 
 
   # build:
