@@ -1,6 +1,6 @@
 ![Python application](https://github.com/amackillop/asyncio-web-service/workflows/Python%20application/badge.svg?branch=master)
 
-# An Asyncronous Web Service
+# Pippin's Asyncronous Web Service
 The original purpose of this application was mostly for me to experiment with 
 asynchronous programming in python and to learn best practices. The service 
 consumes jobs that consist of a list of urls of images to be downloaded and 
